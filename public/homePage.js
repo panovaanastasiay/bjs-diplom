@@ -18,12 +18,17 @@ ApiConnector.current(response => {
 
 let rateBoard = new RatesBoard;
 
-ApiConnector.getStocks(response => {
-  if(response.success) {
-    rateBoard.clearTable;
-    rateBoard.fillTable(response.data);
-  }
-});
+function getStocks() {
+  ApiConnector.getStocks(response => {
+    if(response.success) {
+      rateBoard.clearTable;
+      rateBoard.fillTable(response.data);
+    }
+  });
+};
+
+setInterval(getStocks, 60000);
+
 
 let moneyManager = new MoneyManager;
 
@@ -31,7 +36,7 @@ moneyManager.addMoneyCallback = (data) => {
   ApiConnector.addMoney(data, response => {
     if(response.success) {
       ProfileWidget.showProfile(response.data);
-      moneyManager.setMessage(true, 'Money is added');
+      moneyManager.setMessage(true, 'Денежная сумма добавлена');
     }
     if(!response.success) {
       moneyManager.setMessage(false, response.error);
@@ -43,7 +48,7 @@ moneyManager.conversionMoneyCallback = (data) => {
   ApiConnector.convertMoney(data, response => {
     if(response.success) {
       ProfileWidget.showProfile(response.data);
-      moneyManager.setMessage(true, 'Money is converted');
+      moneyManager.setMessage(true, 'Конвертация выполнена');
       }
     if(!response.success) {
       moneyManager.setMessage(false, response.error);
@@ -55,7 +60,7 @@ moneyManager.sendMoneyCallback = (data) => {
   ApiConnector.transferMoney(data, response => {
     if(response.success) {
       ProfileWidget.showProfile(response.data);
-      moneyManager.setMessage(true, 'Money is transfered');
+      moneyManager.setMessage(true, 'Перевод выполнен');
       }
     if(!response.success) {
       moneyManager.setMessage(false, response.error);
@@ -80,7 +85,7 @@ let favoriteWidget = new FavoritesWidget;
         favoriteWidget.clearTable();
         favoriteWidget.fillTable(response.data);
         moneyManager.updateUsersList(response.data);
-        favoriteWidget.setMessage(true, 'User is added');
+        favoriteWidget.setMessage(true, 'Пользователь добавлен');
       }
       if(!response.success) {
         favoriteWidget.setMessage(false, response.error);
@@ -95,7 +100,7 @@ let favoriteWidget = new FavoritesWidget;
         favoriteWidget.clearTable();
         favoriteWidget.fillTable(response.data);
         moneyManager.updateUsersList(response.data);
-        favoriteWidget.setMessage(true, 'User is removed');
+        favoriteWidget.setMessage(true, 'Пользователь удален');
       }
       if(!response.success) {
         favoriteWidget.setMessage(false, response.error);
